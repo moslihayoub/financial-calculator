@@ -269,7 +269,7 @@ export const ExportTabs: React.FC = () => {
           </button>
           
           <button
-            onClick={() => { handleShare(); setShareDrawerOpen(false) }}
+            onClick={async () => { await handleShare(); setShareDrawerOpen(false) }}
             className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors"
           >
             <Share size={20} className="text-[var(--color-slate)]" />

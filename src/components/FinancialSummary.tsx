@@ -47,9 +47,9 @@ export const FinancialSummary: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex justify-between items-center pt-sm mt-md">
+        <div className="flex flex-col md:flex-row md:justify-between items-center pt-sm mt-md gap-xs md:gap-0">
           <TooltipLabel shortText={t.netProfitShort} fullText={t.netProfit} isTitle />
-          <span className="text-display-sm text-[var(--text-ink)]">
+          <span className="text-display-sm text-[var(--text-ink)] text-center md:text-right">
             {formatCurrency(totals.netProfit, currency)}
           </span>
         </div>
