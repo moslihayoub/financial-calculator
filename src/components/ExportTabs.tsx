@@ -166,17 +166,26 @@ export const ExportTabs: React.FC = () => {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleShare = async () => {
+  const handleShare = () => {
     const text = tabs[activeTab].generator()
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: tabs[activeTab].label,
-          text: text,
-        })
-      } catch (err) {
+    if (navigator.share && navigator.canShare && navigator.canShare({ text })) {
+      navigator.share({
+        title: tabs[activeTab].label,
+        text: text,
+      }).catch((err) => {
         console.error('Error sharing', err)
-      }
+        // Fallback to copy if share is cancelled or fails
+        handleCopy()
+      })
+    } else if (navigator.share) {
+      // If canShare is false but share exists, try anyway
+      navigator.share({
+        title: tabs[activeTab].label,
+        text: text,
+      }).catch((err) => {
+        console.error('Error sharing', err)
+        handleCopy()
+      })
     } else {
       handleCopy()
     }
@@ -269,7 +278,7 @@ export const ExportTabs: React.FC = () => {
           </button>
           
           <button
-            onClick={async () => { await handleShare(); setShareDrawerOpen(false) }}
+            onClick={() => { handleShare(); setShareDrawerOpen(false) }}
             className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors"
           >
             <Share size={20} className="text-[var(--color-slate)]" />
