@@ -19,7 +19,6 @@ export const SettingsPanel: React.FC = () => {
   return (
     <div className="flex flex-col gap-xl">
       <section className="space-y-md">
-        <h3 className="text-subtitle border-b border-[var(--border-hairline)] pb-xs">{t.settingsTitle}</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           <div className="space-y-xs">

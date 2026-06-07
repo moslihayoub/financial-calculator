@@ -5,13 +5,17 @@ import { useTranslation } from '../utils/i18n'
 import { DatePicker } from './DatePicker'
 import { CustomSelect } from './CustomSelect'
 
-export const GlobalSettingsPanel: React.FC = () => {
+interface GlobalSettingsPanelProps {
+  isAccordion?: boolean
+}
+
+export const GlobalSettingsPanel: React.FC<GlobalSettingsPanelProps> = ({ isAccordion = false }) => {
   const { settings, updateSettings } = useCalculatorStore()
   const t = useTranslation(settings.language)
 
   return (
-    <div className="card-container mb-section">
-      <h2 className="text-eyebrow text-[var(--color-stone)] mb-lg">{t.globalSettings}</h2>
+    <div className={isAccordion ? "" : "card-container mb-section"}>
+      {!isAccordion && <h2 className="text-eyebrow text-[var(--color-stone)] mb-lg">{t.globalSettings}</h2>}
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg">
         {/* Client Name */}

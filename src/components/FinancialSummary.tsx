@@ -14,15 +14,19 @@ const TooltipLabel = ({ shortText, fullText, isTitle = false }: { shortText: str
   </span>
 )
 
-export const FinancialSummary: React.FC = () => {
+interface FinancialSummaryProps {
+  isAccordion?: boolean
+}
+
+export const FinancialSummary: React.FC<FinancialSummaryProps> = ({ isAccordion = false }) => {
   const { settings, setSidebar } = useCalculatorStore()
   const totals = useFinancialTotals()
   const t = useTranslation(settings.language)
   const currency = settings.currency
 
   return (
-    <div className="card-container rounded-lg sticky top-lg">
-      <h2 className="text-heading-sm mb-lg">{t.financialSummary}</h2>
+    <div className={isAccordion ? "" : "card-container rounded-lg sticky top-lg"}>
+      {!isAccordion && <h2 className="text-heading-sm mb-lg">{t.financialSummary}</h2>}
 
       <div className="space-y-md">
         <div className="flex justify-between items-center pb-sm border-b border-[var(--border-hairline)]">

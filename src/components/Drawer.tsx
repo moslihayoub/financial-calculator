@@ -7,9 +7,10 @@ interface DrawerProps {
   onClose: () => void
   title?: string
   children: React.ReactNode
+  panelClassName?: string
 }
 
-export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, title, children }) => {
+export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, title, children, panelClassName = '' }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -32,7 +33,7 @@ export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, title, children
       />
       
       {/* Drawer Panel */}
-      <div className="relative bg-[var(--bg-surface)] w-full rounded-t-2xl shadow-2xl animate-slide-up flex flex-col max-h-[90vh]">
+      <div className={`relative bg-[var(--bg-surface)] w-full rounded-t-2xl shadow-2xl animate-slide-up flex flex-col max-h-[90vh] ${panelClassName}`}>
         <div className="flex items-center justify-between p-md border-b border-[var(--border-hairline)]">
           {title ? <h3 className="text-heading-sm">{title}</h3> : <div />}
           <button 

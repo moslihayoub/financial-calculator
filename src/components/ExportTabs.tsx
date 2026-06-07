@@ -243,7 +243,7 @@ export const ExportTabs: React.FC = () => {
 
       <div className="flex-1 flex flex-col p-md bg-[var(--color-canvas-warm)]">
         <textarea
-          className="w-full flex-1 bg-transparent text-body font-mono text-[var(--color-graphite)] focus:outline-none resize-none"
+          className="w-full flex-1 bg-transparent text-body font-mono text-[var(--text-ink-soft)] focus:outline-none resize-none"
           readOnly
           value={tabs[activeTab].generator()}
           dir={settings.language === 'AR' ? 'rtl' : 'ltr'}
@@ -266,31 +266,30 @@ export const ExportTabs: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Share Drawer */}
       <Drawer isOpen={shareDrawerOpen} onClose={() => setShareDrawerOpen(false)} title="Partager le document">
         <div className="flex flex-col gap-sm">
           <button
             onClick={() => { handleCopy(); setShareDrawerOpen(false) }}
-            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors"
+            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors border border-[var(--border-hairline-soft)] cursor-pointer"
           >
-            {copied ? <Check size={20} className="text-[var(--bg-primary)]" /> : <Copy size={20} className="text-[var(--color-slate)]" />}
-            <span className="ml-md text-body-strong text-left">{copied ? 'Copié' : 'Copier dans le presse-papier'}</span>
+            {copied ? <Check size={20} className="text-[var(--bg-primary)] flex-shrink-0" /> : <Copy size={20} className="text-[var(--text-ink-soft)] flex-shrink-0" />}
+            <span className="ml-md text-body-strong text-left text-[var(--text-ink)]">{copied ? 'Copié' : 'Copier dans le presse-papier'}</span>
           </button>
           
           <button
             onClick={() => { handleShare(); setShareDrawerOpen(false) }}
-            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors"
+            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors border border-[var(--border-hairline-soft)] cursor-pointer"
           >
-            <Share size={20} className="text-[var(--color-slate)]" />
-            <span className="ml-md text-body-strong text-left">Partager via app</span>
+            <Share size={20} className="text-[var(--text-ink-soft)] flex-shrink-0" />
+            <span className="ml-md text-body-strong text-left text-[var(--text-ink)]">Partager via app</span>
           </button>
           
           <button
             onClick={() => { handleEmail(); setShareDrawerOpen(false) }}
-            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors"
+            className="w-full flex items-center p-md bg-[var(--color-canvas-warm)] rounded-lg hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 transition-colors border border-[var(--border-hairline-soft)] cursor-pointer"
           >
-            <Mail size={20} className="text-[var(--color-slate)]" />
-            <span className="ml-md text-body-strong text-left">Envoyer par Email</span>
+            <Mail size={20} className="text-[var(--text-ink-soft)] flex-shrink-0" />
+            <span className="ml-md text-body-strong text-left text-[var(--text-ink)]">Envoyer par Email</span>
           </button>
         </div>
       </Drawer>

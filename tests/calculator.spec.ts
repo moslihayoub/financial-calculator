@@ -37,7 +37,7 @@ test.describe('Freelance Financial Calculator E2E', () => {
     await page.goto('/');
     
     // Total HT is typically displayed in the right column
-    const totalHTLabel = page.locator('span', { hasText: /^Total HT$/ }).locator('xpath=following-sibling::span');
+    const totalHTLabel = page.locator('span', { hasText: /^Total HT$/ }).locator('xpath=following-sibling::span').first();
     const initialTotal = await totalHTLabel.textContent();
     
     // Change the rate of the first service

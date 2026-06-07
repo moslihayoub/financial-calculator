@@ -53,7 +53,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
           key={option.value}
           onClick={() => handleSelect(option.value)}
           className={`flex items-center justify-between px-3 py-2 w-full text-left transition-colors rounded-md hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700 ${
-            option.value === value ? 'text-[var(--text-ink)] font-medium bg-gray-50 dark:bg-gray-800/50' : 'text-[var(--color-graphite)]'
+            option.value === value ? 'text-[var(--text-ink)] font-medium bg-gray-50 dark:bg-gray-800/50' : 'text-[var(--text-ink-soft)]'
           }`}
         >
           <span className="truncate pr-4">{option.label}</span>

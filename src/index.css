@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
   --color-primary: #000000;
   --color-on-primary: #ffffff;
@@ -60,6 +62,7 @@
     --bg-primary: var(--color-on-primary);
     --text-on-primary: var(--color-primary);
     --bg-surface: var(--color-scrim);
+    --color-canvas-warm: #121212;
   }
 
   body {
@@ -142,3 +145,71 @@
     @apply opacity-100;
   }
 }
+
+/* Stepper Component Styles */
+.stepper-container {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-hairline-soft);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  overflow: hidden;
+  height: 32px;
+}
+
+.stepper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-ink-soft);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.stepper-btn:hover {
+  background-color: var(--border-hairline);
+}
+
+.stepper-input {
+  width: 36px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-ink);
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.stepper-input::-webkit-outer-spin-button,
+.stepper-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Minimalist Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hairline-soft);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-soft);
+}
+
+
+

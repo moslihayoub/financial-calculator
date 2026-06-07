@@ -16,24 +16,42 @@ const TooltipHeader = ({ shortText, fullText }: { shortText: string, fullText: s
   </span>
 )
 
-export const ServiceTable: React.FC = () => {
+interface ServiceTableProps {
+  isAccordion?: boolean
+}
+
+export const ServiceTable: React.FC<ServiceTableProps> = ({ isAccordion = false }) => {
   const { services, updateService, toggleServiceActivity, toggleAllServices, addService, settings, setSidebar } = useCalculatorStore()
   const t = useTranslation(settings.language)
   
   const allActive = services.length > 0 && services.every(s => s.active)
 
   return (
-    <div className="card-container mb-section">
-      <div className="flex items-center justify-between mb-lg">
-        <h2 className="text-eyebrow text-[var(--color-stone)]">{t.services}</h2>
-        <button
-          onClick={addService}
-          className="btn-primary h-[32px] px-4 flex items-center justify-center gap-xs text-[13px]"
-        >
-          <Plus size={14} />
-          {t.addService}
-        </button>
-      </div>
+    <div className={isAccordion ? "" : "card-container mb-section"}>
+      {!isAccordion && (
+        <div className="flex items-center justify-between mb-lg">
+          <h2 className="text-eyebrow text-[var(--color-stone)]">{t.services}</h2>
+          <button
+            onClick={addService}
+            className="btn-primary h-[32px] px-4 flex items-center justify-center gap-xs text-[13px]"
+          >
+            <Plus size={14} />
+            {t.addService}
+          </button>
+        </div>
+      )}
+      {isAccordion && (
+        <div className="flex items-center justify-between mb-md pt-sm">
+          <div />
+          <button
+            onClick={addService}
+            className="btn-primary h-[32px] px-4 flex items-center justify-center gap-xs text-[13px]"
+          >
+            <Plus size={14} />
+            {t.addService}
+          </button>
+        </div>
+      )}
 
       {/* Mobile View: Cards */}
       <div className="block md:hidden space-y-4">
@@ -101,23 +119,42 @@ export const ServiceTable: React.FC = () => {
               </div>
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block"><TooltipHeader shortText={t.rateHT} fullText={t.rateHTFull || ''} /></label>
-                <input
-                  type="number"
-                  className="bg-transparent text-body w-full focus:outline-none h-[30px] border-b border-[var(--border-hairline-soft)]"
-                  value={service.rate}
-                  onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })}
-                  min="0"
-                />
+                <div className="stepper-container mt-1">
+                  <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - 1) })} className="stepper-btn">-</button>
+                  <input type="number" className="stepper-input" value={service.rate} onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })} min="0" />
+                  <button type="button" onClick={() => updateService(service.id, { rate: service.rate + 1 })} className="stepper-btn">+</button>
+                </div>
               </div>
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block"><TooltipHeader shortText={t.quantity} fullText={t.quantityFull || ''} /></label>
-                <input
-                  type="number"
-                  className="bg-transparent text-body w-full focus:outline-none h-[30px] border-b border-[var(--border-hairline-soft)]"
-                  value={service.quantity}
-                  onChange={(e) => updateService(service.id, { quantity: Number(e.target.value) })}
-                  min="1"
-                />
+                <div className="stepper-container mt-1">
+                  <button
+                    type="button"
+                    onClick={() => updateService(service.id, { quantity: Math.max(1, service.quantity - 1) })}
+                    className="stepper-btn"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    className="stepper-input"
+                    value={service.quantity}
+                    onChange={(e) => {
+                      const val = Number(e.target.value)
+                      if (!isNaN(val) && val >= 1) {
+                        updateService(service.id, { quantity: val })
+                      }
+                    }}
+                    min="1"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => updateService(service.id, { quantity: service.quantity + 1 })}
+                    className="stepper-btn"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block">{t.dueDate}</label>
@@ -130,23 +167,19 @@ export const ServiceTable: React.FC = () => {
               </div>
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block"><TooltipHeader shortText={t.tva} fullText={t.tvaFull || ''} /></label>
-                <input
-                  type="number"
-                  className="bg-transparent text-body w-full focus:outline-none h-[30px] border-b border-[var(--border-hairline-soft)]"
-                  value={service.tvaPercent}
-                  onChange={(e) => updateService(service.id, { tvaPercent: Number(e.target.value) })}
-                  min="0"
-                />
+                <div className="stepper-container mt-1">
+                  <button type="button" onClick={() => updateService(service.id, { tvaPercent: Math.max(0, service.tvaPercent - 1) })} className="stepper-btn">-</button>
+                  <input type="number" className="stepper-input" value={service.tvaPercent} onChange={(e) => updateService(service.id, { tvaPercent: Number(e.target.value) })} min="0" />
+                  <button type="button" onClick={() => updateService(service.id, { tvaPercent: service.tvaPercent + 1 })} className="stepper-btn">+</button>
+                </div>
               </div>
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block"><TooltipHeader shortText={t.commission} fullText={t.commissionFull || ''} /></label>
-                <input
-                  type="number"
-                  className="bg-transparent text-body w-full focus:outline-none h-[30px] border-b border-[var(--border-hairline-soft)]"
-                  value={service.commissionPercent}
-                  onChange={(e) => updateService(service.id, { commissionPercent: Number(e.target.value) })}
-                  min="0"
-                />
+                <div className="stepper-container mt-1">
+                  <button type="button" onClick={() => updateService(service.id, { commissionPercent: Math.max(0, service.commissionPercent - 1) })} className="stepper-btn">-</button>
+                  <input type="number" className="stepper-input" value={service.commissionPercent} onChange={(e) => updateService(service.id, { commissionPercent: Number(e.target.value) })} min="0" />
+                  <button type="button" onClick={() => updateService(service.id, { commissionPercent: service.commissionPercent + 1 })} className="stepper-btn">+</button>
+                </div>
               </div>
             </div>
           </div>
@@ -227,22 +260,41 @@ export const ServiceTable: React.FC = () => {
                   />
                 </td>
                 <td className="py-md px-xs align-top">
-                  <input
-                    type="number"
-                    className="bg-transparent text-body w-full focus:outline-none"
-                    value={service.rate}
-                    onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })}
-                    min="0"
-                  />
+                  <div className="stepper-container">
+                    <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - 1) })} className="stepper-btn">-</button>
+                    <input type="number" className="stepper-input" value={service.rate} onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })} min="0" />
+                    <button type="button" onClick={() => updateService(service.id, { rate: service.rate + 1 })} className="stepper-btn">+</button>
+                  </div>
                 </td>
                 <td className="py-md px-xs align-top">
-                  <input
-                    type="number"
-                    className="bg-transparent text-body w-full focus:outline-none"
-                    value={service.quantity}
-                    onChange={(e) => updateService(service.id, { quantity: Number(e.target.value) })}
-                    min="1"
-                  />
+                  <div className="stepper-container">
+                    <button
+                      type="button"
+                      onClick={() => updateService(service.id, { quantity: Math.max(1, service.quantity - 1) })}
+                      className="stepper-btn"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      className="stepper-input"
+                      value={service.quantity}
+                      onChange={(e) => {
+                        const val = Number(e.target.value)
+                        if (!isNaN(val) && val >= 1) {
+                          updateService(service.id, { quantity: val })
+                        }
+                      }}
+                      min="1"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => updateService(service.id, { quantity: service.quantity + 1 })}
+                      className="stepper-btn"
+                    >
+                      +
+                    </button>
+                  </div>
                 </td>
                 <td className="py-md px-xs align-top">
                   <DatePicker
@@ -251,22 +303,18 @@ export const ServiceTable: React.FC = () => {
                   />
                 </td>
                 <td className="py-md px-xs align-top">
-                  <input
-                    type="number"
-                    className="bg-transparent text-body w-full focus:outline-none"
-                    value={service.tvaPercent}
-                    onChange={(e) => updateService(service.id, { tvaPercent: Number(e.target.value) })}
-                    min="0"
-                  />
+                  <div className="stepper-container">
+                    <button type="button" onClick={() => updateService(service.id, { tvaPercent: Math.max(0, service.tvaPercent - 1) })} className="stepper-btn">-</button>
+                    <input type="number" className="stepper-input" value={service.tvaPercent} onChange={(e) => updateService(service.id, { tvaPercent: Number(e.target.value) })} min="0" />
+                    <button type="button" onClick={() => updateService(service.id, { tvaPercent: service.tvaPercent + 1 })} className="stepper-btn">+</button>
+                  </div>
                 </td>
                 <td className="py-md px-xs align-top">
-                  <input
-                    type="number"
-                    className="bg-transparent text-body w-full focus:outline-none"
-                    value={service.commissionPercent}
-                    onChange={(e) => updateService(service.id, { commissionPercent: Number(e.target.value) })}
-                    min="0"
-                  />
+                  <div className="stepper-container">
+                    <button type="button" onClick={() => updateService(service.id, { commissionPercent: Math.max(0, service.commissionPercent - 1) })} className="stepper-btn">-</button>
+                    <input type="number" className="stepper-input" value={service.commissionPercent} onChange={(e) => updateService(service.id, { commissionPercent: Number(e.target.value) })} min="0" />
+                    <button type="button" onClick={() => updateService(service.id, { commissionPercent: service.commissionPercent + 1 })} className="stepper-btn">+</button>
+                  </div>
                 </td>
               </tr>
             ))}
