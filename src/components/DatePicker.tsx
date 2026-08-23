@@ -37,7 +37,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, classNa
 
   useEffect(() => {
     if (isOpen) {
-      setCurrentMonth(startOfMonth(value))
+      // Use setTimeout to avoid synchronous setState during render cycle / cascading render
+      setTimeout(() => setCurrentMonth(startOfMonth(value)), 0)
     }
   }, [isOpen, value])
 
@@ -49,7 +50,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, classNa
   const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1))
   const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1))
 
-  const CalendarContent = () => {
+  const renderCalendarContent = () => {
     const monthStart = startOfMonth(currentMonth)
     const monthEnd = endOfMonth(currentMonth)
     const startDate = startOfWeek(monthStart, { weekStartsOn: 1 })
@@ -113,7 +114,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, classNa
       {/* Desktop Dropdown */}
       {!isMobile && isOpen && (
         <div className="absolute z-50 top-full left-0 mt-1 bg-[var(--bg-surface)] border border-[var(--border-hairline)] rounded-lg shadow-lg animate-fade-in overflow-hidden w-[280px]">
-          <CalendarContent />
+          {renderCalendarContent()}
         </div>
       )}
 
@@ -122,7 +123,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, classNa
         <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title={title || "Sélectionner une date"}>
           <div className="flex justify-center pb-md">
             <div className="w-full max-w-[320px]">
-              <CalendarContent />
+              {renderCalendarContent()}
             </div>
           </div>
         </Drawer>

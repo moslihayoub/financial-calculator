@@ -1,40 +1,8 @@
 import { create } from 'zustand'
+import type { Currency, Language, Theme, RateType, ServiceItem, GlobalSettings } from '../types'
+import { calculateFinancialTotals, formatCurrency as pureFormatCurrency, toCents } from '../lib/currency'
 
-export type Currency = 'Dhs' | 'EUR' | 'USD'
-export type Language = 'FR' | 'ENG' | 'AR'
-export type Theme = 'light' | 'dark' | 'system'
-export type RateType = 'Day' | 'Hour'
-
-export interface ServiceItem {
-  id: string
-  name: string
-  active: boolean
-  rateType: RateType
-  rate: number
-  quantity: number
-  dueDate: Date
-  tvaPercent: number
-  commissionPercent: number
-  description?: string
-}
-
-interface UserProfile {
-  name: string
-  title: string
-  phone: string
-  email: string
-}
-
-interface GlobalSettings {
-  clientName: string
-  documentDate: Date
-  documentRef: string
-  partnerAgency: string
-  currency: Currency
-  language: Language
-  theme: Theme
-  userProfile: UserProfile
-}
+export type { Currency, Language, Theme, RateType, ServiceItem, GlobalSettings }
 
 interface CalculatorState {
   settings: GlobalSettings
@@ -55,7 +23,7 @@ const defaultServices: ServiceItem[] = [
     name: 'Web Hostinger',
     active: true,
     rateType: 'Day',
-    rate: 1500,
+    rate: toCents(1500),
     quantity: 3,
     dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     tvaPercent: 20,
@@ -66,7 +34,7 @@ const defaultServices: ServiceItem[] = [
     name: 'Video ADS',
     active: true,
     rateType: 'Hour',
-    rate: 400,
+    rate: toCents(400),
     quantity: 8,
     dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     tvaPercent: 20,
@@ -77,7 +45,7 @@ const defaultServices: ServiceItem[] = [
     name: 'Crea post ADS',
     active: true,
     rateType: 'Day',
-    rate: 1200,
+    rate: toCents(1200),
     quantity: 2,
     dueDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
     tvaPercent: 20,
@@ -144,57 +112,10 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     })),
 }))
 
-// Derived Selectors
+// Derived Selectors using pure calculation functions
 export const useFinancialTotals = () => {
   const services = useCalculatorStore((state) => state.services)
-  const activeServices = services.filter((s) => s.active)
-
-  let totalHT = 0
-  let totalTVA = 0
-  let totalCommission = 0
-
-  activeServices.forEach((s) => {
-    const serviceHT = s.rate * s.quantity
-    const serviceTVA = serviceHT * (s.tvaPercent / 100)
-    // Based on requirements, commission is calculated directly on HT:
-    const serviceCommission = serviceHT * (s.commissionPercent / 100)
-
-    totalHT += serviceHT
-    totalTVA += serviceTVA
-    totalCommission += serviceCommission
-  })
-
-  const totalTTC = totalHT + totalTVA
-  const netProfit = totalHT - totalCommission
-
-  return { totalHT, totalTVA, totalTTC, totalCommission, netProfit }
+  return calculateFinancialTotals(services)
 }
 
-export const formatCurrency = (amount: number, currency: Currency) => {
-  const formatters = {
-    Dhs: new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-      useGrouping: true,
-    }),
-    EUR: new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }),
-    USD: new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }),
-  }
-
-  // To enforce Western Arabic numerals, 'en-US' is used regardless of the selected language.
-  if (currency === 'Dhs') {
-    return `${formatters[currency].format(amount)} Dhs`
-  }
-  return formatters[currency].format(amount)
-}
+export const formatCurrency = pureFormatCurrency

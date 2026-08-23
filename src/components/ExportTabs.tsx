@@ -4,6 +4,7 @@ import { CustomSelect } from './CustomSelect'
 import { Drawer } from './Drawer'
 import { format } from 'date-fns'
 import { useCalculatorStore, useFinancialTotals, formatCurrency } from '../store'
+import { calculateServiceHT } from '../lib/currency'
 import { useTranslation } from '../utils/i18n'
 
 export const ExportTabs: React.FC = () => {
@@ -29,7 +30,7 @@ export const ExportTabs: React.FC = () => {
     content += `|---|---|---|---|---|---|\n`
     
     activeServices.forEach(s => {
-      const lineHT = s.rate * s.quantity
+      const lineHT = calculateServiceHT(s.rate, s.quantity)
       content += `| ${s.name} | ${s.rateType === 'Day' ? t.day : t.hour} | ${formatCurrency(s.rate, settings.currency)} | ${s.quantity} | ${s.tvaPercent}% | **${formatCurrency(lineHT, settings.currency)}** |\n`
     })
     
@@ -49,7 +50,7 @@ export const ExportTabs: React.FC = () => {
     content += `${t.poText}\n\n`
     
     activeServices.forEach(s => {
-      const lineHT = s.rate * s.quantity
+      const lineHT = calculateServiceHT(s.rate, s.quantity)
       content += `- **${s.name}**: ${s.quantity} ${s.rateType === 'Day' ? t.day : t.hour}(s) at ${formatCurrency(s.rate, settings.currency)} -> **${formatCurrency(lineHT, settings.currency)}** (Due: ${format(s.dueDate, 'yyyy-MM-dd')})\n`
     })
     
@@ -67,7 +68,7 @@ export const ExportTabs: React.FC = () => {
     
     content += `--- SUMMARY ---\n`
     activeServices.forEach(s => {
-      content += `• ${s.name}: ${formatCurrency(s.rate * s.quantity, settings.currency)} HT\n`
+      content += `• ${s.name}: ${formatCurrency(calculateServiceHT(s.rate, s.quantity), settings.currency)} HT\n`
     })
     content += `\n`
     content += `${t.totalHT}: ${formatCurrency(totals.totalHT, settings.currency)}\n`
@@ -83,7 +84,7 @@ export const ExportTabs: React.FC = () => {
     let content = `${t.whatsappText}`
     
     activeServices.forEach(s => {
-      content += `🔸 *${s.name}*\n   ${s.quantity} x ${formatCurrency(s.rate, settings.currency)} = ${formatCurrency(s.rate * s.quantity, settings.currency)} HT\n`
+      content += `🔸 *${s.name}*\n   ${s.quantity} x ${formatCurrency(s.rate, settings.currency)} = ${formatCurrency(calculateServiceHT(s.rate, s.quantity), settings.currency)} HT\n`
     })
     
     content += `\n💰 *${t.totalTTC}: ${formatCurrency(totals.totalTTC, settings.currency)}*\n`
@@ -112,7 +113,7 @@ export const ExportTabs: React.FC = () => {
     html += `</tr></thead><tbody>`
     
     activeServices.forEach(s => {
-      const lineHT = s.rate * s.quantity
+      const lineHT = calculateServiceHT(s.rate, s.quantity)
       html += `<tr>`
       html += `<td style="padding: 8px; border-bottom: 1px solid #eee;">${s.name}</td>`
       html += `<td style="padding: 8px; border-bottom: 1px solid #eee;">${s.rateType === 'Day' ? t.day : t.hour}</td>`
@@ -195,10 +196,10 @@ export const ExportTabs: React.FC = () => {
     const text = tabs[activeTab].generator()
     const subject = encodeURIComponent(tabs[activeTab].label)
     const body = encodeURIComponent(text)
-    window.location.href = `mailto:?subject=${subject}&body=${body}`
+    window.location.assign(`mailto:?subject=${subject}&body=${body}`)
   }
 
-  const ActionButtons = () => (
+  const renderActionButtons = () => (
     <>
       <button
         onClick={handleCopy}
@@ -251,7 +252,7 @@ export const ExportTabs: React.FC = () => {
         
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center justify-between gap-sm mt-md pt-sm border-t border-[var(--border-hairline)]">
-          <ActionButtons />
+          {renderActionButtons()}
         </div>
 
         {/* Mobile Actions */}

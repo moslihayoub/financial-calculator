@@ -25,7 +25,7 @@ export const SettingsPanel: React.FC = () => {
             <label className="text-label text-[var(--color-slate)]">{t.language}</label>
             <CustomSelect
               value={settings.language}
-              onChange={(val) => updateSettings({ language: val as any })}
+              onChange={(val) => updateSettings({ language: val as import('../types').Language })}
               options={[
                 { label: 'Français', value: 'FR' },
                 { label: 'English', value: 'ENG' },
@@ -40,7 +40,7 @@ export const SettingsPanel: React.FC = () => {
             <label className="text-label text-[var(--color-slate)]">{t.theme}</label>
             <CustomSelect
               value={settings.theme}
-              onChange={(val) => updateSettings({ theme: val as any })}
+              onChange={(val) => updateSettings({ theme: val as import('../types').Theme })}
               options={[
                 { label: t.themeLight, value: 'light' },
                 { label: t.themeDark, value: 'dark' },

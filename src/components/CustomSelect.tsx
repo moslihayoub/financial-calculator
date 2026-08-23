@@ -9,7 +9,7 @@ export interface Option {
 
 interface CustomSelectProps {
   value: string | number
-  onChange: (value: any) => void
+  onChange: (value: string | number) => void
   options: Option[]
   className?: string
   title?: string
@@ -46,7 +46,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
     setIsOpen(false)
   }
 
-  const ListContent = () => (
+  const renderListContent = () => (
     <div className="flex flex-col p-1 gap-1">
       {options.map((option) => (
         <button
@@ -77,14 +77,14 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, opt
       {/* Desktop Dropdown */}
       {!isMobile && isOpen && (
         <div className="absolute z-50 top-full left-0 mt-1 min-w-[200px] w-max max-w-[300px] bg-[var(--bg-surface)] border border-[var(--border-hairline)] rounded-md shadow-lg animate-fade-in overflow-hidden">
-          <ListContent />
+          {renderListContent()}
         </div>
       )}
 
       {/* Mobile Drawer */}
       {isMobile && (
         <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title={title || "Sélectionner"}>
-          <ListContent />
+          {renderListContent()}
         </Drawer>
       )}
     </div>

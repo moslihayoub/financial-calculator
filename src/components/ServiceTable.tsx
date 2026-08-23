@@ -6,6 +6,7 @@ import { useTranslation } from '../utils/i18n'
 import { Tooltip } from './Tooltip'
 import { CustomSelect } from './CustomSelect'
 import { DatePicker } from './DatePicker'
+import { centsToFloat, toCents } from '../lib/currency'
 
 const TooltipHeader = ({ shortText, fullText }: { shortText: string, fullText: string }) => (
   <span className="inline-flex items-center gap-1">
@@ -120,9 +121,9 @@ export const ServiceTable: React.FC<ServiceTableProps> = ({ isAccordion = false 
               <div>
                 <label className="text-micro-caps text-[var(--color-slate)] mb-1 block"><TooltipHeader shortText={t.rateHT} fullText={t.rateHTFull || ''} /></label>
                 <div className="stepper-container mt-1">
-                  <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - 1) })} className="stepper-btn">-</button>
-                  <input type="number" className="stepper-input" value={service.rate} onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })} min="0" />
-                  <button type="button" onClick={() => updateService(service.id, { rate: service.rate + 1 })} className="stepper-btn">+</button>
+                  <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - toCents(1)) })} className="stepper-btn">-</button>
+                  <input type="number" className="stepper-input" value={centsToFloat(service.rate)} onChange={(e) => updateService(service.id, { rate: toCents(e.target.value) })} min="0" />
+                  <button type="button" onClick={() => updateService(service.id, { rate: service.rate + toCents(1) })} className="stepper-btn">+</button>
                 </div>
               </div>
               <div>
@@ -261,9 +262,9 @@ export const ServiceTable: React.FC<ServiceTableProps> = ({ isAccordion = false 
                 </td>
                 <td className="py-md px-xs align-top">
                   <div className="stepper-container">
-                    <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - 1) })} className="stepper-btn">-</button>
-                    <input type="number" className="stepper-input" value={service.rate} onChange={(e) => updateService(service.id, { rate: Number(e.target.value) })} min="0" />
-                    <button type="button" onClick={() => updateService(service.id, { rate: service.rate + 1 })} className="stepper-btn">+</button>
+                    <button type="button" onClick={() => updateService(service.id, { rate: Math.max(0, service.rate - toCents(1)) })} className="stepper-btn">-</button>
+                    <input type="number" className="stepper-input" value={centsToFloat(service.rate)} onChange={(e) => updateService(service.id, { rate: toCents(e.target.value) })} min="0" />
+                    <button type="button" onClick={() => updateService(service.id, { rate: service.rate + toCents(1) })} className="stepper-btn">+</button>
                   </div>
                 </td>
                 <td className="py-md px-xs align-top">
