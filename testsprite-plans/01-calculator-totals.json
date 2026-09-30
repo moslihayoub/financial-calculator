@@ -1,0 +1,9 @@
+{
+  "projectId": "c9180cfc-7aa6-48e2-b40a-91ca5d8532b6",
+  "type": "frontend",
+  "name": "Financial Simulator — Daily Rate & Calculations",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to https://financial-calculator-five-rho.vercel.app/" },
+    { "type": "assertion", "description": "The financial calculator inputs (TJM, working days, charges) and live results are rendered properly" }
+  ]
+}
